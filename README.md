@@ -16,8 +16,8 @@ make
 
 ```
 Usages
-Generate difference image     : ./diff.out -g -a INPUT_A -b INPUT_B -o OUTPUT_DIFFERENCE_IMAGE [-w IMAGE_WIDTH] [-h IMAGE_WIDTH]
-Recover from difference image : ./diff.out -r -b INPUT_B -d INPUT_DIFFERENCE_IMAGE -o OUTPUT_RECOVERED_IMAGE [-w IMAGE_WIDTH] [-h IMAGE_WIDTH]
+Generate difference image     : ./diff.out -g -a INPUT_A -b INPUT_B -o OUTPUT_DIFFERENCE_IMAGE [-w IMAGE_WIDTH] [-h IMAGE_WIDTH] [-f FRAME_COUNT]
+Recover from difference image : ./diff.out -r -b INPUT_B -d INPUT_DIFFERENCE_IMAGE -o OUTPUT_RECOVERED_IMAGE [-w IMAGE_WIDTH] [-h IMAGE_WIDTH] [-f FRAME_COUNT]
 
 Pixel value calculation
   Generate : d = (a - b + offset) & mask
