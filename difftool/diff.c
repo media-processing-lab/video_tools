@@ -33,7 +33,7 @@ void test_diff_and_merge() {
   }
 }
 
-int generate_difference_image(const char *input_a_filename, const char *input_b_filename, const char *output_filename, const int width, const int height) {
+int generate_difference_image(const char *input_a_filename, const char *input_b_filename, const char *output_filename, const int width, const int height, const int frame_count) {
   FILE *fpa = fopen(input_a_filename, "rb");
   FILE *fpb = fopen(input_b_filename, "rb");
   FILE *fpout = fopen(output_filename, "wb");
@@ -41,11 +41,12 @@ int generate_difference_image(const char *input_a_filename, const char *input_b_
     fprintf(stderr, "Error in opening file.\n");
     return 1;
   }
-  int total_value_count_per_frame = width * height + width * height / 4 + width * height / 4;
+  size_t total_value_count_per_frame = width * height + width * height / 4 + width * height / 4;
+  size_t total_value_count = total_value_count_per_frame * frame_count;
   uint16_t pixel_value_a = 0;
   uint16_t pixel_value_b = 0;
   uint16_t pixel_value_out = 0;
-  for (int i = 0; i < total_value_count_per_frame; ++i)
+  for (size_t i = 0; i < total_value_count; ++i)
   {
     fread(&pixel_value_a, sizeof(pixel_value_a), 1, fpa);
     fread(&pixel_value_b, sizeof(pixel_value_b), 1, fpb);
@@ -54,7 +55,7 @@ int generate_difference_image(const char *input_a_filename, const char *input_b_
   }
 }
 
-int recover_image(const char *input_b_filename, const char *input_d_filename, const char *output_filename, int width, int height) {
+int recover_image(const char *input_b_filename, const char *input_d_filename, const char *output_filename, const int width, const int height, const int frame_count) {
   FILE *fpb = fopen(input_b_filename, "rb");
   FILE *fpd = fopen(input_d_filename, "rb");
   FILE *fpout = fopen(output_filename, "wb");
@@ -62,11 +63,12 @@ int recover_image(const char *input_b_filename, const char *input_d_filename, co
     fprintf(stderr, "Error in opening file.\n");
     return 1;
   }
-  int total_value_count_per_frame = width * height + width * height / 4 + width * height / 4;
+  size_t total_value_count_per_frame = width * height + width * height / 4 + width * height / 4;
+  size_t total_value_count = total_value_count_per_frame * frame_count;
   uint16_t pixel_value_b = 0;
   uint16_t pixel_value_d = 0;
   uint16_t pixel_value_out = 0;
-  for (int i = 0; i < total_value_count_per_frame; ++i)
+  for (size_t i = 0; i < total_value_count; ++i)
   {
     fread(&pixel_value_b, sizeof(pixel_value_b), 1, fpb);
     fread(&pixel_value_d, sizeof(pixel_value_d), 1, fpd);
@@ -77,8 +79,8 @@ int recover_image(const char *input_b_filename, const char *input_d_filename, co
 
 void print_usege(FILE *output, char* const argv[]) {
   fprintf(output, "Usages\n");
-  fprintf(output, "Generate difference image     : %s -g -a INPUT_A -b INPUT_B -o OUTPUT_DIFFERENCE_IMAGE [-w IMAGE_WIDTH] [-h IMAGE_WIDTH]\n", argv[0]);
-  fprintf(output, "Recover from difference image : %s -r -b INPUT_B -d INPUT_DIFFERENCE_IMAGE -o OUTPUT_RECOVERED_IMAGE [-w IMAGE_WIDTH] [-h IMAGE_WIDTH]\n", argv[0]);
+  fprintf(output, "Generate difference image     : %s -g -a INPUT_A -b INPUT_B -o OUTPUT_DIFFERENCE_IMAGE [-w IMAGE_WIDTH] [-h IMAGE_WIDTH] [-f FRAME_COUNT]\n", argv[0]);
+  fprintf(output, "Recover from difference image : %s -r -b INPUT_B -d INPUT_DIFFERENCE_IMAGE -o OUTPUT_RECOVERED_IMAGE [-w IMAGE_WIDTH] [-h IMAGE_WIDTH] [-f FRAME_COUNT]\n", argv[0]);
   fprintf(output, "\n");
   fprintf(output, "Pixel value calculation\n");
   fprintf(output, "  Generate : d = (a - b + offset) & mask\n");
@@ -99,6 +101,7 @@ void print_usege(FILE *output, char* const argv[]) {
   fprintf(output, "  -o : Specify output image filename.\n");
   fprintf(output, "  -w : Specify image width. (default : 3840)\n");
   fprintf(output, "  -h : Specify image height. (default : 2160)\n");
+  fprintf(output, "  -f : Specify number of frames in image. (default : 1)\n");
 }
 
 int main(int argc, char* const argv[]) {
@@ -114,8 +117,9 @@ int main(int argc, char* const argv[]) {
   bool recovering_mode = false;
   int width = 3840;
   int height = 2160;
-  
-  const char optstring[] = "gra:b:d:o:w:h";
+  int frame_count = 1;
+
+  const char optstring[] = "gra:b:d:o:w:h:f:";
   struct option longopts[] = {
     { 0, 0, 0, 0 },
   };
@@ -146,6 +150,9 @@ int main(int argc, char* const argv[]) {
       break;
     case 'h':
       height = atoi(optarg);
+      break;
+    case 'f':
+      frame_count = atoi(optarg);
       break;
 
     case '?':
@@ -184,7 +191,7 @@ int main(int argc, char* const argv[]) {
     if (error_flag) {
       return 1;
     }
-    return generate_difference_image(input_a_filename, input_b_filename, output_filename, width, height);
+    return generate_difference_image(input_a_filename, input_b_filename, output_filename, width, height, frame_count);
   }
   else if (recovering_mode)
   {
@@ -203,7 +210,7 @@ int main(int argc, char* const argv[]) {
     if (error_flag) {
       return 1;
     }
-    return recover_image(input_b_filename, input_d_filename, output_filename, width, height);
+    return recover_image(input_b_filename, input_d_filename, output_filename, width, height, frame_count);
   }
   return 0;
 }

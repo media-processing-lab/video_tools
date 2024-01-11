@@ -39,4 +39,5 @@ Input and Output
   -o : Specify output image filename.
   -w : Specify image width. (default : 3840)
   -h : Specify image height. (default : 2160)
+  -f : Specify number of frames in image. (default : 1)
 ```
