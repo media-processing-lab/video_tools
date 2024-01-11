@@ -44,7 +44,7 @@ int generate_difference_image(const char *input_a_filename, const char *input_b_
   int total_value_count_per_frame = width * height + width * height / 4 + width * height / 4;
   uint16_t pixel_value_a = 0;
   uint16_t pixel_value_b = 0;
-  int16_t pixel_value_out = 0;
+  uint16_t pixel_value_out = 0;
   for (int i = 0; i < total_value_count_per_frame; ++i)
   {
     fread(&pixel_value_a, sizeof(pixel_value_a), 1, fpa);
@@ -65,7 +65,7 @@ int recover_image(const char *input_b_filename, const char *input_d_filename, co
   int total_value_count_per_frame = width * height + width * height / 4 + width * height / 4;
   uint16_t pixel_value_b = 0;
   uint16_t pixel_value_d = 0;
-  int16_t pixel_value_out = 0;
+  uint16_t pixel_value_out = 0;
   for (int i = 0; i < total_value_count_per_frame; ++i)
   {
     fread(&pixel_value_b, sizeof(pixel_value_b), 1, fpb);

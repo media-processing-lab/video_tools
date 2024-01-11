@@ -2,6 +2,10 @@
 
 ## difftool
 
+### Requirements
+
+* Only support Little Endian ISA (e.g. amd64)
+
 ### Build
 
 ```
