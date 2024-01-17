@@ -41,3 +41,16 @@ Input and Output
   -h : Specify image height. (default : 2160)
   -f : Specify number of frames in image. (default : 1)
 ```
+
+## generate_histogram
+
+### Requirements
+
+* Python > 3.9
+* Matplotlib
+
+### Usage
+
+```
+generate_histogram.py [-h] --input INPUT --output OUTPUT
+```
