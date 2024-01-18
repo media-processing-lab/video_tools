@@ -49,8 +49,14 @@ Input and Output
 * Python > 3.9
 * Matplotlib
 
+### Limitations
+
+This program supports only yuv420p10le pixel format.
+
 ### Usage
 
-```
-generate_histogram.py [-h] --input INPUT --output OUTPUT
-```
+generate_histogram.py [-h] --input INPUT --output OUTPUT [--width WIDTH] [--height HEIGHT] [--frame-offset FRAME_OFFSET] [--frame-count FRAME_COUNT] [--pixel-format {yuv420p10le}] [--bit-depth {10}] [--bin-count BIN_COUNT]
+
+### Example output
+
+![Example histogram](generate_histogram/example.png)
